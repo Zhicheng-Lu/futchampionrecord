@@ -1,4 +1,4 @@
-	<div id="modify_squad_modal" class="modal">
+	<div id="red_pick_modal" class="modal">
 		<div class="modal-content container" style="height: 100%;">
 			<div class="modal-header">
 				<span class="close" onclick="close_modal()">&times;</span>
@@ -7,9 +7,9 @@
 				<input id="player_name_input" type="search" style="width: 100%; margin-bottom: 30px; border: 1px solid #AAAAAA;" oninput="player_name_oninput()" value="">
 				<div class="row">
 					<?php
-					$counter = 0;
-					$sql = 'SELECT * FROM players';
+					$sql = 'SELECT * FROM players WHERE version="FUT champion"';
 					$result = $conn->query($sql);
+					$counter = 05;
 					while ($row = $result->fetch_assoc()) {
 						echo '
 					<div class="col-xxl-24 col-xl-30 col-lg-40 col-sm-60" id="player_'.$counter.'" style="height: 150px; border-bottom: 1px solid #888888; cursor: pointer;" onclick="choose_player('.$row["id"].')">
@@ -24,8 +24,8 @@
 							</div>
 						</div>
 					</div>';
-						$counter += 1;
 					}
+						$counter += 1;
 					?>
 				</div>
 			</div>
@@ -33,7 +33,7 @@
 	</div><!-- /.modal -->
 
 	<style type="text/css">
-		#modify_squad_modal {
+		#red_pick_modal {
         	z-index: 9999;
         }
 
@@ -48,14 +48,16 @@
 
 	<script type="text/javascript">
 		var position;
+		var game_player_name;
 
-		function open_modal(p) {
-			position = p;
-			document.getElementById("modify_squad_modal").style.display = "block";
+		function open_modal(game_player, posi) {
+			position = posi;
+			game_player_name = game_player;
+			document.getElementById("red_pick_modal").style.display = "block";
 		}
 
 		function close_modal() {
-			document.getElementById("modify_squad_modal").style.display = "none";
+			document.getElementById("red_pick_modal").style.display = "none";
 		}
 
 		// close modal when click outside of popup box
@@ -69,7 +71,6 @@
 			}
 		}
 
-		var counter = <?php echo $counter; ?>;
 		var players = [];
     	<?php
     	$sql = "SELECT * FROM players";
@@ -80,6 +81,7 @@
     	}
     	?>
 
+    	var counter = <?php echo $counter; ?>;
         // filter while input
 	    function player_name_oninput() {
 	    	var input = document.getElementById("player_name_input").value;
@@ -93,32 +95,34 @@
 	    	}
 	    }
 
+	    var fut_champion_id = <?php echo $fut_champion_id ?>;
 	    function choose_player(player_id) {
 	    	var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                    // Typical action to be performed when the document is ready:
-                   document.getElementById("position_" + position).innerHTML = xhttp.responseText;
+                   document.getElementById("position_" + game_player_name + "_" + position).innerHTML = xhttp.responseText;
                    close_modal();
                 }
             };
-            xhttp.open("POST", "new_fut_champion_tabs/squad/modify_player.php", true);
+            xhttp.open("POST", "fut_champion_tabs/red_picks/pick_red.php", true);
             xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhttp.send("position=" + position + "&player_id=" + player_id);
+            xhttp.send("fut_champion_id=" + fut_champion_id + "&game_player=" + game_player_name + "&position=" + position + "&player_id=" + player_id);
 	    }
 
-	    function clear_player(p) {
-	    	position = p;
+	    function clear_player(game_player, posi) {
+	    	position = posi;
+			game_player_name = game_player;
 			event.stopPropagation();
 			var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                    // Typical action to be performed when the document is ready:
-                   document.getElementById("position_" + position).innerHTML = xhttp.responseText;
+                   document.getElementById("position_" + game_player_name + "_" + position).innerHTML = xhttp.responseText;
                 }
             };
-            xhttp.open("POST", "new_fut_champion_tabs/squad/modify_player.php", true);
+            xhttp.open("POST", "fut_champion_tabs/red_picks/pick_red.php", true);
             xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhttp.send("position=" + position + "&player_id=");
+            xhttp.send("fut_champion_id=" + fut_champion_id + "&game_player=" + game_player_name + "&position=" + position + "&player_id=");
 	    }
 	</script>

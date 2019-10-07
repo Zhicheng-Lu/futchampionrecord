@@ -40,7 +40,7 @@ if (isset($_POST["add_game"])) {
                                 <li class="<?php if ($_GET["tab"]=="squad") echo "current-menu-item";?>"><a href="new_fut_champion.php?fut_champion_id=<?php echo $fut_champion_id;?>&tab=squad">阵容</a></li>
                                 <li class="<?php if ($_GET["tab"]=="record") echo "current-menu-item";?>"><a href="new_fut_champion.php?fut_champion_id=<?php echo $fut_champion_id;?>&tab=record">比赛记录</a></li>
                                 <li class="<?php if ($_GET["tab"]=="stats") echo "current-menu-item";?>"><a href="new_fut_champion.php?fut_champion_id=<?php echo $fut_champion_id;?>&tab=stats">数据统计</a></li>
-                                <li><a href="new_fut_champion_tabs/logout.php?fut_champion_id=<?php echo $fut_champion_id;?>">登出</a></li>
+                                <li><a href="new_fut_champion_tabs/logout.php?fut_champion_id=<?php echo $fut_champion_id;?>&tab=<?php echo $_GET["tab"];?>">登出</a></li>
                             </ul>
                         </nav><!-- .site-navigation -->
 

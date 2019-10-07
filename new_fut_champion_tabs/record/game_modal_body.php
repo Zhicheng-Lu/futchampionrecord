@@ -4,7 +4,7 @@
 					$game = $_POST["game"];
 
 					$score1 = "";
-					$socre2 = "";
+					$score2 = "";
 					$penalty1 = "";
 					$penalty2 = "";
 					$sql = 'SELECT * FROM results WHERE fut_champion_id='.$fut_champion_id.' AND game='.$game;

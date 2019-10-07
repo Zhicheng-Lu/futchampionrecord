@@ -40,6 +40,7 @@ $fut_champion_id = $_GET["fut_champion_id"];
                             <ul class="d-flex flex-column flex-lg-row justify-content-lg-end align-items-center">
                                 <li class="<?php if ($_GET["tab"]=="record") echo "current-menu-item";?>"><a href="fut_champion.php?fut_champion_id=<?php echo $fut_champion_id;?>&tab=record">比赛记录</a></li>
                                 <li class="<?php if ($_GET["tab"]=="stats") echo "current-menu-item";?>"><a href="fut_champion.php?fut_champion_id=<?php echo $fut_champion_id;?>&tab=stats">数据统计</a></li>
+                                <li class="<?php if ($_GET["tab"]=="red_picks") echo "current-menu-item";?>"><a href="fut_champion.php?fut_champion_id=<?php echo $fut_champion_id;?>&tab=red_picks">红卡</a></li>
                             </ul>
                         </nav><!-- .site-navigation -->
 

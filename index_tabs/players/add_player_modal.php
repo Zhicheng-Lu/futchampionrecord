@@ -7,11 +7,11 @@
 				<div class="modal-body" id="modal_body">
 					<div>
 						<div style="width: 70px; display: inline-block;">英文名：</div>
-						<input type="text" name="E_name" style="display: inline-block;">
+						<input type="text" name="E_name" style="display: inline-block;" required>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">卡种：</div>
-						<select name="version" style="display: inline-block;">
+						<select name="version" style="display: inline-block;" required>
 							<option value=""></option>
 							<option value="Gold Common">Gold Common</option>
 							<option value="Gold Rare">Gold Rare</option>
@@ -22,23 +22,23 @@
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">中文名：</div>
-						<input type="text" name="C_name" style="display: inline-block;">
+						<input type="text" name="C_name" style="display: inline-block;" required>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">总评：</div>
-						<input type="number" name="rating" style="display: inline-block;">
+						<input type="number" name="rating" style="display: inline-block;" required>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">卡面：</div>
-						<input type="file" name="card">
+						<input type="file" name="card" required>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">头像：</div>
-						<input type="file" name="photo">
+						<input type="file" name="photo" required>
 					</div>
 				</div>
 				<div class="modal-footer justify-content-center">
-					<button name="create_fut_champion" class="submit_button">确认</button>
+					<button name="create_player" class="submit_button">确认</button>
 					<button type="button" class="submit_button" onclick="close_add_player_modal()">取消</button>
 				</div>
 
