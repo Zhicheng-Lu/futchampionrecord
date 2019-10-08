@@ -10,7 +10,7 @@
 			<br><br>
 
 			<div class="row justify-content-center">
-				<div id="stats_display" class="col-sm-90"></div>
+				<div id="stats_display" class="col-120"></div>
 			</div>
 		</div>
 	</div>
@@ -20,7 +20,6 @@
 		var game_player_name = "";
 		var column = "rating";
 		var order = "DESC";
-		var order_by = "PLA.rating DESC";
 		get_stats();
 
 		function change_game_player(game_player) {
@@ -37,10 +36,6 @@
 				order = "DESC";
 			}
 
-			if (new_column == "rating") order_by = "PLA.rating " + order;
-			if (new_column == "appearance") order_by = "APP.appearance " + order;
-			if (new_column == "num_score") order_by = "SCO.num_score " + order;
-			if (new_column == "num_assist") order_by = "ASS.num_assist " + order;
 			column = new_column;
 			get_stats();
 		}
@@ -64,6 +59,6 @@
             };
             xhttp.open("POST", "fut_champion_tabs/stats/get_stats.php", true);
             xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhttp.send("fut_champion_id=" + fut_champion_id + "&game_player_name=" + game_player_name + "&order_by=" + order_by);
+            xhttp.send("fut_champion_id=" + fut_champion_id + "&game_player_name=" + game_player_name + "&column=" + column + "&order=" + order);
 	    }
 	</script>

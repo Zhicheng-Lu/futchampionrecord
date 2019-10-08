@@ -4,7 +4,9 @@
 				$game_player_name = $_POST["game_player_name"];
 				if ($game_player_name == "") $search_citeria = "";
 				else $search_citeria = ' AND R.game_player="'.$game_player_name.'"';
-				$order_by = $_POST["order_by"];
+				$column = $_POST["column"];
+				$order = $_POST["order"];
+				$order_by = $column." ".$order;
 
 				// win
 				$sql = 'SELECT COUNT(*) AS win FROM results AS R WHERE fut_champion_id='.$fut_champion_id.' AND (score1>score2 OR penalty1>penalty2)'.$search_citeria;
@@ -39,18 +41,8 @@
 					$average_conceed = bcdiv($conceed, $win+$loss, 2);
 				}
 
-				$rating_icon = "";
-				$appearance_icon = "";
-				$score_icon = "";
-				$assist_icon = "";
-				if ($order_by == "PLA.rating ASC") $rating_icon = '<i class="fa fa-chevron-up"></i>';
-				if ($order_by == "PLA.rating DESC") $rating_icon = '<i class="fa fa-chevron-down"></i>';
-				if ($order_by == "APP.appearance ASC") $appearance_icon = '<i class="fa fa-chevron-up"></i>';
-				if ($order_by == "APP.appearance DESC") $appearance_icon = '<i class="fa fa-chevron-down"></i>';
-				if ($order_by == "SCO.num_score ASC") $score_icon = '<i class="fa fa-chevron-up"></i>';
-				if ($order_by == "SCO.num_score DESC") $score_icon = '<i class="fa fa-chevron-down"></i>';
-				if ($order_by == "ASS.num_assist ASC") $assist_icon = '<i class="fa fa-chevron-up"></i>';
-				if ($order_by == "ASS.num_assist DESC") $assist_icon = '<i class="fa fa-chevron-down"></i>';
+				if ($order == "ASC") $icon = '<i class="fa fa-chevron-up"></i>';
+				else $icon = '<i class="fa fa-chevron-down"></i>';
 
 				echo '
 				<center>
@@ -65,22 +57,26 @@
 
 				<table style="width: 100%;">
 					<tr>
-						<th style="width: 40%;">姓名</th>
-						<th style="width: 15%; cursor: pointer;" onclick="change_order_by(\'rating\')">总评'.$rating_icon.'</th>
-						<th style="width: 15%; cursor: pointer;" onclick="change_order_by(\'appearance\')">出场'.$appearance_icon.'</th>
-						<th style="width: 15%; cursor: pointer; display:" onclick="change_order_by(\'num_score\')">进球'.$score_icon.'</th>
-						<th style="width: 15%; cursor: pointer;" onclick="change_order_by(\'num_assist\')">助攻'.$assist_icon.'</th>
+						<th style="width: 20%;">姓名</th>
+						<th style="width: 8%; cursor: pointer;" onclick="change_order_by(\'rating\')">总评'.(($column=="rating")?$icon:"").'</th>
+						<th style="width: 8%; cursor: pointer;" onclick="change_order_by(\'appearance\')">出场'.(($column=="appearance")?$icon:"").'</th>
+						<th style="width: 8%; cursor: pointer;" onclick="change_order_by(\'num_score\')">进球'.(($column=="num_score")?$icon:"").'</th>
+						<th style="width: 8%; cursor: pointer;" onclick="change_order_by(\'avg_score\')">场均进球'.(($column=="avg_score")?$icon:"").'</th>
+						<th style="width: 8%; cursor: pointer;" onclick="change_order_by(\'num_assist\')">助攻'.(($column=="num_assist")?$icon:"").'</th>
+						<th style="width: 8%; cursor: pointer;" onclick="change_order_by(\'avg_assist\')">场均助攻'.(($column=="avg_assist")?$icon:"").'</th>
+						<th style="width: 8%; cursor: pointer;" onclick="change_order_by(\'avg_sum\')">场均制造'.(($column=="avg_sum")?$icon:"").'</th>
 					</tr>';
 
 				if ($game_player_name == "") {
-					$sql = 'SELECT APP.player_id, PLA.E_name, PLA.C_name, PLA.rating, APP.appearance, SCO.num_score, ASS.num_assist FROM (SELECT player_id, COUNT(*) AS appearance FROM appearances WHERE fut_champion_id='.$fut_champion_id.' GROUP BY player_id) AS APP LEFT JOIN (SELECT scorer, COUNT(*) AS num_score FROM goals WHERE fut_champion_id='.$fut_champion_id.' GROUP BY scorer) AS SCO ON APP.player_id=SCO.scorer LEFT JOIN (SELECT assist, COUNT(*) AS num_assist FROM goals WHERE fut_champion_id='.$fut_champion_id.' GROUP BY assist) AS ASS ON APP.player_id=ASS.assist LEFT JOIN players AS PLA on APP.player_id=PLA.id ORDER BY '.$order_by;
+					$sql = 'SELECT APP.player_id, E_name, C_name, rating, appearance, num_score, (num_score/appearance) AS avg_score, num_assist, (num_assist/appearance) AS avg_assist, ((num_score+num_assist)/appearance) AS avg_sum FROM (SELECT player_id, COUNT(*) AS appearance FROM appearances WHERE fut_champion_id='.$fut_champion_id.' GROUP BY player_id) AS APP LEFT JOIN (SELECT scorer, COUNT(*) AS num_score FROM goals WHERE fut_champion_id='.$fut_champion_id.' GROUP BY scorer) AS SCO ON APP.player_id=SCO.scorer LEFT JOIN (SELECT assist, COUNT(*) AS num_assist FROM goals WHERE fut_champion_id='.$fut_champion_id.' GROUP BY assist) AS ASS ON APP.player_id=ASS.assist LEFT JOIN players AS PLA on APP.player_id=PLA.id ORDER BY '.$order_by;
 				}
 				else {
-					$sql = 'SELECT APP.player_id, PLA.E_name, PLA.C_name, PLA.rating, APP.appearance, SCO.num_score, ASS.num_assist FROM (SELECT APP.player_id, COUNT(*) AS appearance FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE APP.fut_champion_id='.$fut_champion_id.' AND R.game_player="'.$game_player_name.'" GROUP BY APP.player_id) AS APP LEFT JOIN (SELECT SCO.scorer, COUNT(*) AS num_score FROM goals AS SCO LEFT JOIN results AS R ON SCO.fut_champion_id=R.fut_champion_id AND SCO.game=R.game WHERE SCO.fut_champion_id='.$fut_champion_id.' AND R.game_player="'.$game_player_name.'" GROUP BY SCO.scorer) AS SCO ON APP.player_id=SCO.scorer LEFT JOIN (SELECT ASS.assist, COUNT(*) AS num_assist FROM goals AS ASS LEFT JOIN results AS R ON ASS.fut_champion_id=R.fut_champion_id AND ASS.game=R.game WHERE ASS.fut_champion_id='.$fut_champion_id.' AND R.game_player="'.$game_player_name.'" GROUP BY assist) AS ASS ON APP.player_id=ASS.assist LEFT JOIN players AS PLA on APP.player_id=PLA.id ORDER BY '.$order_by;
+					$sql = 'SELECT APP.player_id, E_name, C_name, rating, appearance, num_score, (num_score/appearance) AS avg_score, num_assist, (num_assist/appearance) AS avg_assist FROM (SELECT APP.player_id, COUNT(*) AS appearance FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE APP.fut_champion_id='.$fut_champion_id.' AND R.game_player="'.$game_player_name.'" GROUP BY APP.player_id) AS APP LEFT JOIN (SELECT SCO.scorer, COUNT(*) AS num_score FROM goals AS SCO LEFT JOIN results AS R ON SCO.fut_champion_id=R.fut_champion_id AND SCO.game=R.game WHERE SCO.fut_champion_id='.$fut_champion_id.' AND R.game_player="'.$game_player_name.'" GROUP BY SCO.scorer) AS SCO ON APP.player_id=SCO.scorer LEFT JOIN (SELECT ASS.assist, COUNT(*) AS num_assist FROM goals AS ASS LEFT JOIN results AS R ON ASS.fut_champion_id=R.fut_champion_id AND ASS.game=R.game WHERE ASS.fut_champion_id='.$fut_champion_id.' AND R.game_player="'.$game_player_name.'" GROUP BY assist) AS ASS ON APP.player_id=ASS.assist LEFT JOIN players AS PLA on APP.player_id=PLA.id ORDER BY '.$order_by;
 				}
 				
 				$result = $conn->query($sql);
 				while ($row = $result->fetch_assoc()) {
+					$appearance = $row["appearance"];
 					$num_score = ($row["num_score"]=="")? 0:$row["num_score"];
 					$num_assist = ($row["num_assist"]=="")? 0:$row["num_assist"];
 					echo '
@@ -101,7 +97,10 @@
 						<td style="text-align: center;">'.$row["rating"].'</td>
 						<td style="text-align: center;">'.$row["appearance"].'</td>
 						<td style="text-align: center;">'.$num_score.'</td>
+						<td style="text-align: center;">'.bcdiv($num_score, $appearance, 2).'</td>
 						<td style="text-align: center;">'.$num_assist.'</td>
+						<td style="text-align: center;">'.bcdiv($num_assist, $appearance, 2).'</td>
+						<td style="text-align: center;">'.$row["avg_sum"].'</td>
 					</tr>';
 				}
 				?>
