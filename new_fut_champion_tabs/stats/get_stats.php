@@ -55,7 +55,12 @@
 				echo '
 				<center>
 					<h3>'.$win.' 胜 ('.$win_rate.'%) '.$loss.' 负 ('.$loss_rate.'%)</h3>
-					<h4>进 '.$score.' 球 (场均 '.$average_score.')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;失 '.$conceed.' 球 (场均 '.$average_conceed.')</h4>
+					<h4>
+						进 '.$score.' 球 (场均 '.$average_score.')
+						<i class="d-md-inline" style="display: none">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i>
+						<i class="d-md-none" style="display: inline"><br></i>
+						失 '.$conceed.' 球 (场均 '.$average_conceed.')
+					</h4>
 				</center>
 
 				<table style="width: 100%;">

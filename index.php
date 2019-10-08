@@ -56,11 +56,15 @@ if (isset($_POST["create_player"])) {
     imagedestroy($tmp);
     header('Location: index.php?tab=players');
 }
+if (!isset($_GET["tab"])) $title = "首页";
+if ($_GET["tab"] == "players") $title = "球员";
+if ($_GET["tab"] == "stats") $title = "总数据统计";
+if ($_GET["tab"] == "red_picks") $title = "红卡";
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>FIFA20周赛全纪录</title>
+    <title>FIFA20周赛 - <?php echo $title; ?></title>
     <meta charset="utf-8">
     <link rel="shortcut icon" href="images/fut_champion_logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

@@ -6,11 +6,14 @@ session_start();
 if (isset($_POST["add_game"])) {
     include("new_fut_champion_tabs/record/add_game.php");
 }
+if ($_GET["tab"] == "squad") $title = "阵容";
+if ($_GET["tab"] == "record") $title = "比赛记录";
+if ($_GET["tab"] == "stats") $title = "数据统计";
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>FIFA20周赛全纪录</title>
+    <title>FIFA20周赛 - <?php echo $fut_champion_id; ?> - <?php echo $title; ?></title>
     <meta charset="utf-8">
     <link rel="shortcut icon" href="images/fut_champion_logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
