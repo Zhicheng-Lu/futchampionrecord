@@ -7,7 +7,7 @@
 				<input id="player_name_input" type="search" style="width: 100%; margin-bottom: 30px; border: 1px solid #AAAAAA;" oninput="player_name_oninput()" value="">
 				<div class="row">
 					<?php
-					$sql = 'SELECT * FROM players WHERE version="FUT champion"';
+					$sql = 'SELECT * FROM players WHERE version="FUT champion" ORDER BY id DESC';
 					$result = $conn->query($sql);
 					$counter = 05;
 					while ($row = $result->fetch_assoc()) {

@@ -57,9 +57,11 @@ if (isset($_POST["create_player"])) {
     header('Location: index.php?tab=players');
 }
 if (!isset($_GET["tab"])) $title = "首页";
-if ($_GET["tab"] == "players") $title = "球员";
-if ($_GET["tab"] == "stats") $title = "总数据统计";
-if ($_GET["tab"] == "red_picks") $title = "红卡";
+else {
+    if ($_GET["tab"] == "players") $title = "球员";
+    if ($_GET["tab"] == "stats") $title = "总数据统计";
+    if ($_GET["tab"] == "red_picks") $title = "红卡";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

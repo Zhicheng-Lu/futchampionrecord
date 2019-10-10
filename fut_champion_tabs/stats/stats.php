@@ -10,7 +10,7 @@
 			<br><br>
 
 			<div class="row justify-content-center">
-				<div id="stats_display" class="col-120"></div>
+				<div id="stats_display" class="col-xxl-100"></div>
 			</div>
 		</div>
 	</div>
@@ -18,7 +18,7 @@
 	<script type="text/javascript">
 		var fut_champion_id = <?php echo $fut_champion_id; ?>;
 		var game_player_name = "";
-		var column = "rating";
+		var column = "appearance";
 		var order = "DESC";
 		get_stats();
 
