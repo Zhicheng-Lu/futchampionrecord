@@ -107,19 +107,19 @@
 	<form action="fut_champion.php" method="post">
 		<input type="hidden" name="fut_champion_id" value="<?php echo $fut_champion_id; ?>">
 		<div id="end_modal" class="modal" style="top: 20%;">
-		<div class="modal-content col-xxl-24 offset-xxl-48 col-xl-30 offset-xl-45 col-lg-40 offset-lg-40 col-sm-60 offset-sm-30">
-			<div class="modal-header">
-				<span class="close" onclick="close_end_modal()">&times;</span>
-			</div>
-			<div class="modal-body" id="modal_body">
-				<p>结束本次周赛以后，包括比分在内的数据均不可以更改。确认结束么？</p>
-			</div>
-			<div class="modal-footer justify-content-center">
-				<button name="end_fut_champion" class="submit_button">确认</button>
-				<button type="button" class="submit_button" onclick="close_end_modal()">取消</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
+			<div class="modal-content col-xxl-24 offset-xxl-48 col-xl-30 offset-xl-45 col-lg-40 offset-lg-40 col-sm-60 offset-sm-30">
+				<div class="modal-header">
+					<span class="close" onclick="close_end_modal()">&times;</span>
+				</div>
+				<div class="modal-body" id="modal_body">
+					<p>结束本次周赛以后，包括比分在内的数据均不可以更改。确认结束么？</p>
+				</div>
+				<div class="modal-footer justify-content-center">
+					<button name="end_fut_champion" class="submit_button">确认</button>
+					<button type="button" class="submit_button" onclick="close_end_modal()">取消</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
 	</form>
 
 

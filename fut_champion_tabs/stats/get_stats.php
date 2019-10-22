@@ -80,9 +80,9 @@
 						((IFNULL(num_score,0)+IFNULL(num_assist,0))/appearance) AS avg_sum, 
 						IFNULL(win,0) AS win, IFNULL(loss,0) AS loss, (IFNULL(win,0)/appearance) AS win_rate
 						FROM (SELECT APP.player_id, COUNT(*) AS appearance FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE APP.fut_champion_id='.$fut_champion_id.$game_player_citeria.' GROUP BY APP.player_id) AS APP 
+						LEFT JOIN players AS PLA on APP.player_id=PLA.id 
 						LEFT JOIN (SELECT SCO.scorer, COUNT(*) AS num_score FROM goals AS SCO LEFT JOIN results AS R ON SCO.fut_champion_id=R.fut_champion_id AND SCO.game=R.game WHERE SCO.fut_champion_id='.$fut_champion_id.$game_player_citeria.' GROUP BY SCO.scorer) AS SCO ON APP.player_id=SCO.scorer 
 						LEFT JOIN (SELECT ASS.assist, COUNT(*) AS num_assist FROM goals AS ASS LEFT JOIN results AS R ON ASS.fut_champion_id=R.fut_champion_id AND ASS.game=R.game WHERE ASS.fut_champion_id='.$fut_champion_id.$game_player_citeria.' GROUP BY assist) AS ASS ON APP.player_id=ASS.assist 
-						LEFT JOIN players AS PLA on APP.player_id=PLA.id 
 						LEFT JOIN (SELECT APP.player_id, COUNT(*) AS win FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE APP.fut_champion_id='.$fut_champion_id.$game_player_citeria.' AND (R.score1>R.score2 OR R.penalty1>R.penalty2) GROUP BY APP.player_id) AS WIN ON APP.player_id=WIN.player_id
 						LEFT JOIN (SELECT APP.player_id, COUNT(*) AS loss FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE APP.fut_champion_id='.$fut_champion_id.$game_player_citeria.' AND (R.score1<R.score2 OR R.penalty1<R.penalty2) GROUP BY APP.player_id) AS LOSS ON APP.player_id=LOSS.player_id
 						ORDER BY '.$order_by;

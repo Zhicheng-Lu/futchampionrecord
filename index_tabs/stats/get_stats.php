@@ -57,29 +57,30 @@
 				<table style="width: 100%;">
 					<tr>
 						<th style="width: 20%;">姓名</th>
-						<th style="width: 8%; cursor: pointer; display: none" class="d-md-table-cell" onclick="change_order_by(\'rating\')">总评'.(($column=="rating")?$icon:"").'</th>
-						<th style="width: 8%; cursor: pointer;" onclick="change_order_by(\'appearance\')">出场'.(($column=="appearance")?$icon:"").'</th>
-						<th style="width: 8%; cursor: pointer;" onclick="change_order_by(\'num_score\')">进球'.(($column=="num_score")?$icon:"").'</th>
-						<th style="width: 8%; cursor: pointer;" onclick="change_order_by(\'num_assist\')">助攻'.(($column=="num_assist")?$icon:"").'</th>
-						<th style="width: 8%; cursor: pointer; display: none" class="d-lg-table-cell" onclick="change_order_by(\'avg_score\')">场均进球'.(($column=="avg_score")?$icon:"").'</th>
-						<th style="width: 8%; cursor: pointer; display: none" class="d-lg-table-cell" onclick="change_order_by(\'avg_assist\')">场均助攻'.(($column=="avg_assist")?$icon:"").'</th>
-						<th style="width: 8%; cursor: pointer; display: none" class="d-sm-table-cell" onclick="change_order_by(\'avg_sum\')">场均制造'.(($column=="avg_sum")?$icon:"").'</th>
-						<th style="width: 8%; cursor: pointer; display: none" class="d-xl-table-cell" onclick="change_order_by(\'win\')">胜'.(($column=="win")?$icon:"").'</th>
-						<th style="width: 8%; cursor: pointer; display: none" class="d-xl-table-cell" onclick="change_order_by(\'loss\')">负'.(($column=="loss")?$icon:"").'</th>
-						<th style="width: 8%; cursor: pointer;" onclick="change_order_by(\'win_rate\')">胜率'.(($column=="win_rate")?$icon:"").'</th>
+						<th style="width: 7%; cursor: pointer; display: none" class="d-md-table-cell" onclick="change_order_by(\'rating\')">总评'.(($column=="rating")?$icon:"").'</th>
+						<th style="width: 7%; cursor: pointer; display: none;" class="d-xl-table-cell" onclick="change_order_by(\'price\')">身价'.(($column=="price")?$icon:"").'</th>
+						<th style="width: 7%; cursor: pointer;" onclick="change_order_by(\'appearance\')">出场'.(($column=="appearance")?$icon:"").'</th>
+						<th style="width: 7%; cursor: pointer;" onclick="change_order_by(\'num_score\')">进球'.(($column=="num_score")?$icon:"").'</th>
+						<th style="width: 7%; cursor: pointer;" onclick="change_order_by(\'num_assist\')">助攻'.(($column=="num_assist")?$icon:"").'</th>
+						<th style="width: 7%; cursor: pointer; display: none" class="d-lg-table-cell" onclick="change_order_by(\'avg_score\')">场均进球'.(($column=="avg_score")?$icon:"").'</th>
+						<th style="width: 7%; cursor: pointer; display: none" class="d-lg-table-cell" onclick="change_order_by(\'avg_assist\')">场均助攻'.(($column=="avg_assist")?$icon:"").'</th>
+						<th style="width: 7%; cursor: pointer; display: none" class="d-sm-table-cell" onclick="change_order_by(\'avg_sum\')">场均制造'.(($column=="avg_sum")?$icon:"").'</th>
+						<th style="width: 7%; cursor: pointer; display: none" class="d-xl-table-cell" onclick="change_order_by(\'win\')">胜'.(($column=="win")?$icon:"").'</th>
+						<th style="width: 7%; cursor: pointer; display: none" class="d-xl-table-cell" onclick="change_order_by(\'loss\')">负'.(($column=="loss")?$icon:"").'</th>
+						<th style="width: 7%; cursor: pointer;" onclick="change_order_by(\'win_rate\')">胜率'.(($column=="win_rate")?$icon:"").'</th>
 					</tr>';
 
 				if ($game_player_name == "") $game_player_citeria = "";
 				else $game_player_citeria = ' AND R.game_player="'.$game_player_name.'"';		
-				$sql = 'SELECT APP.player_id, E_name, C_name, rating, appearance, 
+				$sql = 'SELECT APP.player_id, E_name, C_name, rating, price, appearance, 
 						IFNULL(num_score,0) AS num_score, (IFNULL(num_score,0)/appearance) AS avg_score, 
 						IFNULL(num_assist,0) AS num_assist, (IFNULL(num_assist,0)/appearance) AS avg_assist, 
 						((IFNULL(num_score,0)+IFNULL(num_assist,0))/appearance) AS avg_sum, 
 						IFNULL(win,0) AS win, IFNULL(loss,0) AS loss, (IFNULL(win,0)/appearance) AS win_rate
 						FROM (SELECT APP.player_id, COUNT(*) AS appearance FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game'.(($game_player_name=="")?"":' WHERE R.game_player="'.$game_player_name.'"').' GROUP BY APP.player_id) AS APP 
+						LEFT JOIN players AS PLA on APP.player_id=PLA.id 
 						LEFT JOIN (SELECT SCO.scorer, COUNT(*) AS num_score FROM goals AS SCO LEFT JOIN results AS R ON SCO.fut_champion_id=R.fut_champion_id AND SCO.game=R.game'.(($game_player_name=="")?"":' WHERE R.game_player="'.$game_player_name.'"').' GROUP BY SCO.scorer) AS SCO ON APP.player_id=SCO.scorer 
 						LEFT JOIN (SELECT ASS.assist, COUNT(*) AS num_assist FROM goals AS ASS LEFT JOIN results AS R ON ASS.fut_champion_id=R.fut_champion_id AND ASS.game=R.game'.(($game_player_name=="")?"":' WHERE R.game_player="'.$game_player_name.'"').' GROUP BY assist) AS ASS ON APP.player_id=ASS.assist 
-						LEFT JOIN players AS PLA on APP.player_id=PLA.id 
 						LEFT JOIN (SELECT APP.player_id, COUNT(*) AS win FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE'.(($game_player_name=="")?"":' R.game_player="'.$game_player_name.'" AND').' (R.score1>R.score2 OR R.penalty1>R.penalty2) GROUP BY APP.player_id) AS WIN ON APP.player_id=WIN.player_id
 						LEFT JOIN (SELECT APP.player_id, COUNT(*) AS loss FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE'.(($game_player_name=="")?"":' R.game_player="'.$game_player_name.'" AND').' (R.score1<R.score2 OR R.penalty1<R.penalty2) GROUP BY APP.player_id) AS LOSS ON APP.player_id=LOSS.player_id
 						ORDER BY '.$order_by;
@@ -105,6 +106,7 @@
 							</div>
 						</td>
 						<td style="text-align: center; display: none;" class="d-md-table-cell">'.$row["rating"].'</td>
+						<td style="text-align: center; display: none;" class="d-xl-table-cell">'.number_format($row["price"], 0, ".", ",").'</td>
 						<td style="text-align: center;">'.$appearance.'</td>
 						<td style="text-align: center;">'.$num_score.'</td>
 						<td style="text-align: center;">'.$num_assist.'</td>

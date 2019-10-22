@@ -1,10 +1,17 @@
 	<div id="modify_squad_modal" class="modal">
-		<div class="modal-content container" style="height: 100%;">
+		<div class="modal-content container" style="min-height: 100%;">
 			<div class="modal-header">
 				<span class="close" onclick="close_modal()">&times;</span>
 			</div>
 			<div class="modal-body" id="modal_body">
-				<input id="player_name_input" type="search" style="width: 100%; margin-bottom: 30px; border: 1px solid #AAAAAA;" oninput="player_name_oninput()" value="">
+				<div style="width: 100%; text-align: center;">
+					<div style="display: inline-block;">
+						<i class="fa fa-search"></i>
+					</div>
+					<div style="display: inline-block;">
+						<input id="player_name_input" type="search" style="width: 100%; margin-bottom: 30px; border: 1px solid #AAAAAA;" oninput="player_name_oninput()" value="">
+					</div>
+				</div>
 				<div class="row">
 					<?php
 					$counter = 0;

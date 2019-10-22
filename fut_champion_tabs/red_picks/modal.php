@@ -1,15 +1,22 @@
 	<div id="red_pick_modal" class="modal">
-		<div class="modal-content container" style="height: 100%;">
+		<div class="modal-content container" style="min-height: 100%;">
 			<div class="modal-header">
 				<span class="close" onclick="close_modal()">&times;</span>
 			</div>
 			<div class="modal-body" id="modal_body">
-				<input id="player_name_input" type="search" style="width: 100%; margin-bottom: 30px; border: 1px solid #AAAAAA;" oninput="player_name_oninput()" value="">
+				<div style="width: 100%; text-align: center;">
+					<div style="display: inline-block;">
+						<i class="fa fa-search"></i>
+					</div>
+					<div style="display: inline-block;">
+						<input id="player_name_input" type="search" style="width: 100%; margin-bottom: 30px; border: 1px solid #AAAAAA;" oninput="player_name_oninput()" value="">
+					</div>
+				</div>
 				<div class="row">
 					<?php
 					$sql = 'SELECT * FROM players WHERE version="FUT champion" ORDER BY id DESC';
 					$result = $conn->query($sql);
-					$counter = 05;
+					$counter = 0;
 					while ($row = $result->fetch_assoc()) {
 						echo '
 					<div class="col-xxl-24 col-xl-30 col-lg-40 col-sm-60" id="player_'.$counter.'" style="height: 150px; border-bottom: 1px solid #888888; cursor: pointer;" onclick="choose_player('.$row["id"].')">
@@ -24,8 +31,8 @@
 							</div>
 						</div>
 					</div>';
-					}
 						$counter += 1;
+					}
 					?>
 				</div>
 			</div>
@@ -73,7 +80,7 @@
 
 		var players = [];
     	<?php
-    	$sql = "SELECT * FROM players";
+    	$sql = 'SELECT * FROM players WHERE version="FUT champion" ORDER BY id DESC';
         $result = $conn->query($sql);
     	while ($row = $result->fetch_assoc()) {
     		echo '
