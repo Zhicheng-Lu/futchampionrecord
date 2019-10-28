@@ -27,7 +27,7 @@
                         <div style="width: 90px; display: inline-block;">
                             <a href="fut_champion.php?fut_champion_id='.$fut_champion_id.'&tab=record" target="_blank" style="text-decoration: underline; color: blue;">'.$date.':</a>
                         </div>
-                        <a href="javascript:void(0)" style="color: black;">'.$win.' 胜 '.$loss.' 负</a>
+                        <a style="color: black;">'.$win.' 胜 '.$loss.' 负</a>
                     </div>';
                     }
 
@@ -57,7 +57,7 @@
 	                        <div style="width: 90px; display: inline-block;">
 	                            <a href="new_fut_champion.php?fut_champion_id='.$fut_champion_id.'&tab=record" target="_blank" style="text-decoration: underline; color: blue;">'.$date.':</a>
 	                        </div>
-	                        <a href="javascript:void(0)" style="color: black;">'.$win.' 胜 '.$loss.' 负</a>
+	                        <a style="color: black;">'.$win.' 胜 '.$loss.' 负</a>
 	                    </div>';
                     	}
                     }

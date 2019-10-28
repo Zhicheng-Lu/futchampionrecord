@@ -1,29 +1,36 @@
 				<?php
-				include("../../includes/connection.php");
-				$fut_champion_id = $_POST["fut_champion_id"];
+				include("connection.php");
 				$game_player_name = $_POST["game_player_name"];
-				if ($game_player_name == "") $search_citeria = "";
-				else $search_citeria = ' AND R.game_player="'.$game_player_name.'"';
 				$column = $_POST["column"];
 				$order = $_POST["order"];
 				$order_by = $column." ".$order;
 				if ($order == "ASC") $order_by = $order_by.', appearance ASC, num_score ASC, num_assist ASC, win_rate ASC, rating ASC';
 				else $order_by = $order_by.', appearance DESC, num_score DESC, num_assist DESC, win_rate DESC, rating DESC';
 
+				if (isset($_POST["fut_champion_id"])) {
+					$fut_champion_id = $_POST["fut_champion_id"];
+					if ($game_player_name == "") $search_citeria = 'fut_champion_id='.$fut_champion_id;
+					else $search_citeria = 'fut_champion_id='.$fut_champion_id.' AND game_player="'.$game_player_name.'"';
+				}
+				else {
+					if ($game_player_name == "") $search_citeria = '';
+					else $search_citeria = 'game_player="'.$game_player_name.'"';
+				}
+
 				// win
-				$sql = 'SELECT COUNT(*) AS win FROM results AS R WHERE fut_champion_id='.$fut_champion_id.' AND (score1>score2 OR penalty1>penalty2)'.$search_citeria;
+				$sql = 'SELECT COUNT(*) AS win FROM results AS R WHERE '.$search_citeria.(($search_citeria=="")?'':' AND').' (score1>score2 OR penalty1>penalty2)';
 				$result = $conn->query($sql);
 				while ($row = $result->fetch_assoc()) {
 					$win = $row["win"];
 				}
 				// loss
-				$sql = 'SELECT COUNT(*) AS loss FROM results AS R WHERE fut_champion_id='.$fut_champion_id.' AND (score1<score2 OR penalty1<penalty2)'.$search_citeria;
+				$sql = 'SELECT COUNT(*) AS loss FROM results AS R WHERE '.$search_citeria.(($search_citeria=='')?'':' AND').' (score1<score2 OR penalty1<penalty2)';
 				$result = $conn->query($sql);
 				while ($row = $result->fetch_assoc()) {
 					$loss = $row["loss"];
 				}
 				// goal & conceed
-				$sql = 'SELECT SUM(score1) AS score, SUM(score2) AS conceed FROM results AS R WHERE fut_champion_id='.$fut_champion_id.$search_citeria;
+				$sql = 'SELECT SUM(score1) AS score, SUM(score2) AS conceed FROM results AS R'.(($search_citeria=='')?'':' WHERE ').$search_citeria;
 				$result = $conn->query($sql);
 				while ($row = $result->fetch_assoc()) {
 					$score = $row["score"];
@@ -73,8 +80,10 @@
 					</tr>';
 
 				if ($game_player_name == "") $game_player_citeria = "";
-				else $game_player_citeria = ' AND R.game_player="'.$game_player_name.'"';		
-				$sql = 'SELECT APP.player_id, E_name, C_name, rating, appearance, 
+				else $game_player_citeria = ' AND R.game_player="'.$game_player_name.'"';
+				if (isset($_POST["fut_champion_id"])) {
+					$fut_champion_id = $_POST["fut_champion_id"];
+					$sql = 'SELECT APP.player_id, E_name, C_name, rating, appearance, 
 						IFNULL(num_score,0) AS num_score, (IFNULL(num_score,0)/appearance) AS avg_score, 
 						IFNULL(num_assist,0) AS num_assist, (IFNULL(num_assist,0)/appearance) AS avg_assist, 
 						((IFNULL(num_score,0)+IFNULL(num_assist,0))/appearance) AS avg_sum, 
@@ -86,6 +95,22 @@
 						LEFT JOIN (SELECT APP.player_id, COUNT(*) AS win FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE APP.fut_champion_id='.$fut_champion_id.$game_player_citeria.' AND (R.score1>R.score2 OR R.penalty1>R.penalty2) GROUP BY APP.player_id) AS WIN ON APP.player_id=WIN.player_id
 						LEFT JOIN (SELECT APP.player_id, COUNT(*) AS loss FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE APP.fut_champion_id='.$fut_champion_id.$game_player_citeria.' AND (R.score1<R.score2 OR R.penalty1<R.penalty2) GROUP BY APP.player_id) AS LOSS ON APP.player_id=LOSS.player_id
 						ORDER BY '.$order_by;
+				}
+				else {
+					$sql = 'SELECT APP.player_id, E_name, C_name, rating, price, appearance, 
+						IFNULL(num_score,0) AS num_score, (IFNULL(num_score,0)/appearance) AS avg_score, 
+						IFNULL(num_assist,0) AS num_assist, (IFNULL(num_assist,0)/appearance) AS avg_assist, 
+						((IFNULL(num_score,0)+IFNULL(num_assist,0))/appearance) AS avg_sum, 
+						IFNULL(win,0) AS win, IFNULL(loss,0) AS loss, (IFNULL(win,0)/appearance) AS win_rate
+						FROM (SELECT APP.player_id, COUNT(*) AS appearance FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game'.(($game_player_name=="")?"":' WHERE R.game_player="'.$game_player_name.'"').' GROUP BY APP.player_id) AS APP 
+						LEFT JOIN players AS PLA on APP.player_id=PLA.id 
+						LEFT JOIN (SELECT SCO.scorer, COUNT(*) AS num_score FROM goals AS SCO LEFT JOIN results AS R ON SCO.fut_champion_id=R.fut_champion_id AND SCO.game=R.game'.(($game_player_name=="")?"":' WHERE R.game_player="'.$game_player_name.'"').' GROUP BY SCO.scorer) AS SCO ON APP.player_id=SCO.scorer 
+						LEFT JOIN (SELECT ASS.assist, COUNT(*) AS num_assist FROM goals AS ASS LEFT JOIN results AS R ON ASS.fut_champion_id=R.fut_champion_id AND ASS.game=R.game'.(($game_player_name=="")?"":' WHERE R.game_player="'.$game_player_name.'"').' GROUP BY assist) AS ASS ON APP.player_id=ASS.assist 
+						LEFT JOIN (SELECT APP.player_id, COUNT(*) AS win FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE'.(($game_player_name=="")?"":' R.game_player="'.$game_player_name.'" AND').' (R.score1>R.score2 OR R.penalty1>R.penalty2) GROUP BY APP.player_id) AS WIN ON APP.player_id=WIN.player_id
+						LEFT JOIN (SELECT APP.player_id, COUNT(*) AS loss FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE'.(($game_player_name=="")?"":' R.game_player="'.$game_player_name.'" AND').' (R.score1<R.score2 OR R.penalty1<R.penalty2) GROUP BY APP.player_id) AS LOSS ON APP.player_id=LOSS.player_id
+						ORDER BY '.$order_by;
+				}
+
 				
 				$result = $conn->query($sql);
 				while ($row = $result->fetch_assoc()) {
@@ -93,14 +118,13 @@
 					$num_score = $row["num_score"];
 					$num_assist = $row["num_assist"];
 					echo '
-					<tr>
+					<tr style="cursor: pointer;" onclick="get_player_game_history('.$row["player_id"].')">
 						<td>
 							<div class="row" style="width: 100%;">
 								<div style="height: 100%; display: none;" class="col-50 d-sm-block">
 									<img src="images/photos/'.$row["player_id"].'.png" style="height: 70px;;">
 								</div>
 								<div style="height: 100%;" class="col-sm-70">
-									&nbsp;
 									<b style="font-size: 12px;">'.$row["C_name"].'</b>
 									<br>
 									<a style="font-size: 10px;">'.$row["E_name"].'</a>
