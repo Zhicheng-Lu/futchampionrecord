@@ -15,7 +15,7 @@
 				<div class="row">
 					<?php
 					$counter = 0;
-					$sql = 'SELECT * FROM players';
+					$sql = 'SELECT * FROM players ORDER BY id DESC';
 					$result = $conn->query($sql);
 					while ($row = $result->fetch_assoc()) {
 						echo '

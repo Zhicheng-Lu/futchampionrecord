@@ -3,8 +3,8 @@
 					$fut_champion_id = $_POST["fut_champion_id"];
 					$game = $_POST["game"];
 
-					$score1 = "";
-					$score2 = "";
+					$score1 = 0;
+					$score2 = 0;
 					$penalty1 = "";
 					$penalty2 = "";
 					$sql = 'SELECT * FROM results WHERE fut_champion_id='.$fut_champion_id.' AND game='.$game;
@@ -71,6 +71,7 @@
 					}
 
 
+					// all goals & assists
 					for ($i=$counter; $i < 16; $i++) {
 						echo '
 							<div style="margin-top: 15px; display: none;" id="goal_'.$i.'">
