@@ -37,7 +37,7 @@
 									LEFT JOIN (SELECT APP.player_id, COUNT(*) AS loss FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE APP.fut_champion_id='.$fut_champion_id.$game_player_citeria.' AND (R.score1<R.score2 OR R.penalty1<R.penalty2) GROUP BY APP.player_id) AS LOSS ON APP.player_id=LOSS.player_id';
 						}
 						else {
-							$sql = 'SELECT PLA.id, appearance, IFNULL(num_score,0) AS num_score, IFNULL(num_assist,0) AS num_assist,
+							$sql = 'SELECT PLA.id, IFNULL(appearance,0) AS appearance, IFNULL(num_score,0) AS num_score, IFNULL(num_assist,0) AS num_assist,
 									IFNULL(win,0) AS win, IFNULL(loss,0) AS loss FROM 
 									(SELECT id FROM players WHERE id='.$player_id.') AS PLA
 									LEFT JOIN (SELECT APP.player_id, COUNT(*) AS appearance FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game'.(($game_player_name=="")?"":' WHERE R.game_player="'.$game_player_name.'"').' GROUP BY APP.player_id) AS APP ON PLA.id=APP.player_id 
@@ -55,13 +55,13 @@
 							<br>
 							出场：'.$appearance.'
 							<br>
-							进球：'.$row["num_score"].' (场均 '.bcdiv($row["num_score"], $appearance, 2).')
+							进球：'.$row["num_score"].' (场均 '.(($appearance==0)?'-':bcdiv($row["num_score"], $appearance, 2)).')
 							&nbsp;&nbsp;
-							助攻：'.$row["num_assist"].' (场均 '.bcdiv($row["num_assist"], $appearance, 2).')
+							助攻：'.$row["num_assist"].' (场均 '.(($appearance==0)?'-':bcdiv($row["num_assist"], $appearance, 2)).')
 							<br>
-							场均制造：'.bcdiv($row["num_score"]+$row["num_assist"], $appearance, 2).'
+							场均制造：'.(($appearance==0)?'-':bcdiv($row["num_score"]+$row["num_assist"], $appearance, 2)).'
 							<br>
-							'.$row["win"].' 胜 ('.round(100*$row["win"]/$appearance).'%)&nbsp;&nbsp;'.$row["loss"].' 负 ('.round(100*$row["loss"]/$appearance).'%)
+							'.$row["win"].' 胜 ('.(($appearance==0)?'-':round(100*$row["win"]/$appearance)).'%)&nbsp;&nbsp;'.$row["loss"].' 负 ('.(($appearance==0)?'-':round(100*$row["loss"]/$appearance)).'%)
 						</div>';
 						}
 					}

@@ -2,7 +2,7 @@
 		<input type="hidden" name="fut_champion_id" value="<?php echo $fut_champion_id; ?>">
 		<input type="hidden" name="game" id="game">
 		<div id="game_modal" class="modal">
-			<div class="modal-content col-xxl-60 offset-xxl-30 col-xl-80 offset-xl-20 col-lg-100 offset-lg-10">
+			<div class="modal-content container">
 				<div class="modal-header">
 					<span class="close" onclick="close_game_modal()">&times;</span>
 				</div>
@@ -52,7 +52,24 @@
 			}
 		}
 
-		// function drag(event) {
-		// 	event.dataTransfer.setData("text", event.target.player_id);
-		// }
+
+		// drag and drop
+		var player_id;
+		function drag(id) {
+			player_id = id;
+		}
+
+		function allowDrop(ev) {
+			ev.preventDefault();
+		}
+
+		function choose_scorer(ev, scorer) {
+			ev.preventDefault();
+			document.getElementById("scorer_" + scorer).value = player_id;
+		}
+
+		function choose_assist(ev, scorer) {
+			ev.preventDefault();
+			document.getElementById("assist_" + scorer).value = player_id;
+		}
 	</script>

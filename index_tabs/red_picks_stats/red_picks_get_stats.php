@@ -53,7 +53,7 @@
 					$avg_sum = (($appearance==0)? '':bcdiv(($num_score+$num_assist), $appearance, 2));
 					$win_rate = (($appearance==0)? '':round(100*$row["win"]/$appearance).'%');
 					echo '
-					<tr>
+					<tr style="cursor: pointer;" onclick="get_player_game_history('.$row["player_id"].')">
 						<td>
 							<div class="row" style="width: 100%;">
 								<div style="height: 100%; display: none;" class="col-50 d-sm-block">
@@ -115,7 +115,7 @@
 					$win_rate = (($appearance==0)? '':round(100*$row["win"]/$appearance).'%');
 					echo '
 					<tr>
-						<td style="text-align: center; height: 70px;"><b>总和</b></td>
+						<td style="text-align: center; height: 70px;"><b>综合</b></td>
 						<td style="text-align: center; display: none;" class="d-xl-table-cell">'.bcdiv($row["avg_rating"],1,2).'</td>
 						<td style="text-align: center; display: none;" class="d-xl-table-cell">'.number_format($row["avg_price"], 0, ".", ",").'</td>
 						<td style="text-align: center;">'.$appearance.'</td>

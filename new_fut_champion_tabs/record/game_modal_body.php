@@ -3,8 +3,8 @@
 					$fut_champion_id = $_POST["fut_champion_id"];
 					$game = $_POST["game"];
 
-					$score1 = 0;
-					$score2 = 0;
+					$score1 = "";
+					$score2 = "";
 					$penalty1 = "";
 					$penalty2 = "";
 					$sql = 'SELECT * FROM results WHERE fut_champion_id='.$fut_champion_id.' AND game='.$game;
@@ -22,7 +22,7 @@
 					echo '
 
 					<div class="row">
-						<div class="col-50">
+						<div class="col-sm-40" style="text-align: center;">
 							<input type="number" id="score1" name="score1" min="0" max="15" style="width: 40px;" oninput="score1_oninput()" value="'.$score1.'"> - <input type="number" id="score2" name="score2" min="0" max="15" style="width: 40px;" oninput="score2_oninput()" value="'.$score2.'">
 							<b style="margin-left: 30px; display: '.$penalty_display.';" id="penalty">(<input type="number" id="penalty1" name="penalty1" min="0" max="15" style="width: 40px;" value="'.$penalty1.'"> - <input type="number" id="penalty2" name="penalty2" min="0" max="15" style="width: 40px;" value="'.$penalty2.'">)</b>';
 
@@ -75,7 +75,7 @@
 					for ($i=$counter; $i < 16; $i++) {
 						echo '
 							<div style="margin-top: 15px; display: none;" id="goal_'.$i.'">
-								<select name="scorer_'.$i.'">
+								<select name="scorer_'.$i.'" id="scorer_'.$i.'" ondragover="allowDrop(event)" ondrop="choose_scorer(event, '.$i.')" style="height: 25px;">
 									<option value=""></option>';
 
 						$sql = 'SELECT * FROM squad AS S LEFT JOIN players AS P ON S.player_id=P.id ORDER BY S.position ASC';
@@ -88,7 +88,7 @@
 						echo '
 								</select>
 								（
-								<select name="assist_'.$i.'">
+								<select name="assist_'.$i.'" id="assist_'.$i.'" ondragover="allowDrop(event)" ondrop="choose_assist(event, '.$i.')" style="height: 25px;">
 									<option value="null"></option>';
 
 						$sql = 'SELECT * FROM squad AS S LEFT JOIN players AS P ON S.player_id=P.id ORDER BY S.position ASC';
@@ -106,7 +106,7 @@
 
 					echo '
 						</div>
-						<div class="col-70">
+						<div class="col-sm-80">
 							<div class="row">';
 
 					$sql = 'SELECT * FROM squad AS S LEFT JOIN players AS P ON S.player_id=P.id ORDER BY S.position ASC';
@@ -121,10 +121,10 @@
 						}
 						// $checked = ($row["position"]<=11)? " checked":"";
 						echo '
-								<div class="col-md-60" style="margin-bottom: 10px;" draggable="true" ondragstart="drag(event)">
-									<div class="row" style="height: 70px;">
+								<div class="col-xl-40 col-md-60" style="margin-bottom: 10px;" draggable="true" ondragstart="drag('.$row["player_id"].')">
+									<div class="row" style="height: 120px;">
 										<div style="height: 100%;" class="col-50">
-											<img src="images/photos/'.$row["id"].'.png" style="height: 100%;">
+											<img src="images/cards/'.$row["id"].'.png" style="height: 100%;" draggable="false">
 										</div>
 										<div style="height: 100%;" class="col-70">
 											<input name="appearances[]" value="'.$row["player_id"].'" type="checkbox"'.$checked.'>
