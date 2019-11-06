@@ -27,10 +27,11 @@
 
 						if (isset($_POST["fut_champion_id"])) {
 							$fut_champion_id = $_POST["fut_champion_id"];
+							$game_player_citeria = ($game_player_name=="")?"":' AND R.game_player="'.$game_player_name.'"';
 							$sql = 'SELECT PLA.id, appearance, IFNULL(num_score,0) AS num_score, IFNULL(num_assist,0) AS num_assist,
-									IFNULL(win,0) AS win, IFNULL(loss,0) AS loss FROM 
+									IFNULL(win,0) AS win, IFNULL(loss,0) AS loss, APP.team_score, APP.team_conceed FROM 
 									(SELECT id FROM players WHERE id='.$player_id.') AS PLA
-									LEFT JOIN (SELECT APP.player_id, COUNT(*) AS appearance FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE APP.fut_champion_id='.$fut_champion_id.$game_player_citeria.' GROUP BY APP.player_id) AS APP ON PLA.id=APP.player_id 
+									LEFT JOIN (SELECT APP.player_id, COUNT(*) AS appearance, SUM(score1) AS team_score, SUM(score2) AS team_conceed FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE APP.fut_champion_id='.$fut_champion_id.$game_player_citeria.' GROUP BY APP.player_id) AS APP ON PLA.id=APP.player_id 
 									LEFT JOIN (SELECT SCO.scorer, COUNT(*) AS num_score FROM goals AS SCO LEFT JOIN results AS R ON SCO.fut_champion_id=R.fut_champion_id AND SCO.game=R.game WHERE SCO.fut_champion_id='.$fut_champion_id.$game_player_citeria.' GROUP BY SCO.scorer) AS SCO ON APP.player_id=SCO.scorer 
 									LEFT JOIN (SELECT ASS.assist, COUNT(*) AS num_assist FROM goals AS ASS LEFT JOIN results AS R ON ASS.fut_champion_id=R.fut_champion_id AND ASS.game=R.game WHERE ASS.fut_champion_id='.$fut_champion_id.$game_player_citeria.' GROUP BY assist) AS ASS ON APP.player_id=ASS.assist 
 									LEFT JOIN (SELECT APP.player_id, COUNT(*) AS win FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE APP.fut_champion_id='.$fut_champion_id.$game_player_citeria.' AND (R.score1>R.score2 OR R.penalty1>R.penalty2) GROUP BY APP.player_id) AS WIN ON APP.player_id=WIN.player_id
@@ -38,9 +39,9 @@
 						}
 						else {
 							$sql = 'SELECT PLA.id, IFNULL(appearance,0) AS appearance, IFNULL(num_score,0) AS num_score, IFNULL(num_assist,0) AS num_assist,
-									IFNULL(win,0) AS win, IFNULL(loss,0) AS loss FROM 
+									IFNULL(win,0) AS win, IFNULL(loss,0) AS loss, APP.team_score, APP.team_conceed FROM 
 									(SELECT id FROM players WHERE id='.$player_id.') AS PLA
-									LEFT JOIN (SELECT APP.player_id, COUNT(*) AS appearance FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game'.(($game_player_name=="")?"":' WHERE R.game_player="'.$game_player_name.'"').' GROUP BY APP.player_id) AS APP ON PLA.id=APP.player_id 
+									LEFT JOIN (SELECT APP.player_id, COUNT(*) AS appearance, SUM(score1) AS team_score, SUM(score2) AS team_conceed FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game'.(($game_player_name=="")?"":' WHERE R.game_player="'.$game_player_name.'"').' GROUP BY APP.player_id) AS APP ON PLA.id=APP.player_id 
 									LEFT JOIN (SELECT SCO.scorer, COUNT(*) AS num_score FROM goals AS SCO LEFT JOIN results AS R ON SCO.fut_champion_id=R.fut_champion_id AND SCO.game=R.game'.(($game_player_name=="")?"":' WHERE R.game_player="'.$game_player_name.'"').' GROUP BY SCO.scorer) AS SCO ON APP.player_id=SCO.scorer 
 									LEFT JOIN (SELECT ASS.assist, COUNT(*) AS num_assist FROM goals AS ASS LEFT JOIN results AS R ON ASS.fut_champion_id=R.fut_champion_id AND ASS.game=R.game'.(($game_player_name=="")?"":' WHERE R.game_player="'.$game_player_name.'"').' GROUP BY assist) AS ASS ON APP.player_id=ASS.assist 
 									LEFT JOIN (SELECT APP.player_id, COUNT(*) AS win FROM appearances AS APP LEFT JOIN results AS R ON APP.fut_champion_id=R.fut_champion_id AND APP.game=R.game WHERE'.(($game_player_name=="")?"":' R.game_player="'.$game_player_name.'" AND').' (R.score1>R.score2 OR R.penalty1>R.penalty2) GROUP BY APP.player_id) AS WIN ON APP.player_id=WIN.player_id
@@ -62,6 +63,10 @@
 							场均制造：'.(($appearance==0)?'-':bcdiv($row["num_score"]+$row["num_assist"], $appearance, 2)).'
 							<br>
 							'.$row["win"].' 胜 ('.(($appearance==0)?'-':round(100*$row["win"]/$appearance)).'%)&nbsp;&nbsp;'.$row["loss"].' 负 ('.(($appearance==0)?'-':round(100*$row["loss"]/$appearance)).'%)
+							<br>
+							球队进球：'.$row["team_score"].' (场均 '.(($appearance==0)?'-':bcdiv($row["team_score"], $appearance, 2)).')
+							&nbsp;&nbsp;
+							球队失球：'.$row["team_conceed"].' (场均 '.(($appearance==0)?'-':bcdiv($row["team_conceed"], $appearance, 2)).')
 						</div>';
 						}
 					}

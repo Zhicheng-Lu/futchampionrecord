@@ -16,6 +16,37 @@
 		</div><!-- /.modal -->
 	</form>
 
+	<style type="text/css">
+		.dropdown {
+			position: relative;
+			width: 140px;
+			height: 36px;
+			display: inline-block;
+			border: 1px solid #D9D9D9;
+			cursor: pointer;
+		}
+
+		.dropdown-options {
+			display: none;
+			position: absolute;
+			background-color: #F9F9F9;
+			box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+			width: 100%;
+			z-index: 1;
+			/*margin-top: 40px;*/
+			cursor: pointer;
+		}
+
+		.dropdown-option:hover {
+			color: white;
+			background-color: #18a3eb;
+		}
+
+		.dropdown:mouseleave .dropdown-options {
+			display: none;
+		}
+	</style>
+
 	<script type="text/javascript">
 		function score1_oninput() {
 			var score1 = document.getElementById("score1").value;
@@ -29,7 +60,7 @@
 				document.getElementById("penalty2").value = "";
 			}
 
-			for (i = 1; i <= 15; i++) {
+			for (i = 1; i <= 10; i++) {
 				document.getElementById("goal_" + i).style.display = "none";
 			}
 			for (i = 1; i <= score1; i++) {
@@ -52,24 +83,65 @@
 			}
 		}
 
+		// drop down list
+		function show_options(dropdown) {
+			options = dropdown.childNodes[3];
+			if (options.style.display == "block") {
+				options.style.display = "none";
+			}
+			else {
+				options.style.display = "block";
+			}
+		}
+
+		function hide_options(dropdown) {
+			options = dropdown.childNodes[3];
+			options.style.display = "none";
+		}
+
+		function choose_player(option, player_id, player_C_name) {
+			event.stopPropagation();
+			options = option.parentNode;
+			options.style.display = "none";
+			dropdown = options.parentNode;
+			// show selected option
+			if (player_id == 0) {
+				dropdown.childNodes[1].innerHTML = '<img src="images/transparent.png" style="height: 30px; width: 30px;">&nbsp';
+			}
+			else {
+				dropdown.childNodes[1].innerHTML = '<img src="images/photos/' + player_id + '.png" style="height: 30px; width: 30px;">' + player_C_name;
+			}
+			// modify hidden input
+			input = dropdown.childNodes[5];
+			if (player_id == 0) input.value = "";
+			else input.value = player_id;
+		}
+
 
 		// drag and drop
 		var player_id;
-		function drag(id) {
+		var player_name;
+		function drag(id, player_C_name) {
 			player_id = id;
+			player_name = player_C_name;
 		}
 
 		function allowDrop(ev) {
 			ev.preventDefault();
 		}
 
-		function choose_scorer(ev, scorer) {
-			ev.preventDefault();
-			document.getElementById("scorer_" + scorer).value = player_id;
-		}
-
-		function choose_assist(ev, scorer) {
-			ev.preventDefault();
-			document.getElementById("assist_" + scorer).value = player_id;
+		function drop_player(dropdown) {
+			event.stopPropagation();
+			// show selected option
+			if (player_id == 0) {
+				dropdown.childNodes[1].innerHTML = '<img src="images/transparent.png" style="height: 30px; width: 30px;">&nbsp';
+			}
+			else {
+				dropdown.childNodes[1].innerHTML = '<img src="images/photos/' + player_id + '.png" style="height: 30px; width: 30px;">' + player_name;
+			}
+			// modify hidden input
+			input = dropdown.childNodes[5];
+			if (player_id == 0) input.value = "";
+			else input.value = player_id;
 		}
 	</script>

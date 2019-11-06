@@ -26,8 +26,11 @@
 	$conn->query($sql);
 	for ($i=1; $i <= $score1; $i++) { 
 		$scorer = $_POST['scorer_'.$i];
+		if ($scorer=="") $scorer = "NULL";
 		$assist = $_POST['assist_'.$i];
+		if ($assist=="") $assist = "NULL";
 		$sql = 'INSERT INTO goals(fut_champion_id, game, scorer, assist) VALUES('.$fut_champion_id.', '.$game.', '.$scorer.', '.$assist.')';
+
 		$conn->query($sql);
 	}
 
