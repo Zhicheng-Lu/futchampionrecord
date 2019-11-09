@@ -17,39 +17,43 @@
 						$price = $row["price"];
 					}
 
-					$versions = array("Gold Rare", "Ones to Watch", "Team of the Week", "FUT Champion", "Icon", "Ultimate Scream", "Storyline");
+					$versions = array("Gold Rare", "Ones to Watch", "Team of the Week", "FUT Champion", "Icon", "Ultimate Scream", "Storyline", "Player of the Month");
 
 					echo '
 					<div>
 						<div style="width: 70px; display: inline-block;">英文名：</div>
-						<input type="text" name="E_name" style="display: inline-block;" value="'.$E_name.'" required>
+						<input type="text" name="E_name" style="display: inline-block; width: 180px;" value="'.$E_name.'" required>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">卡种：</div>
-						<select name="version" style="display: inline-block;" required>
-							<option value=""></option>';
-
+						<div class="dropdown" onclick="show_options(this)" onmouseleave="hide_options(this)">
+							<div><img src="images/'.(($player_version=="")?'transparent':'card_types/'.$player_version).'.png" style="height: 30px;">'.(($player_version=="")?'':$player_version).'</div>
+							<div class="dropdown-options" onclick="event.stopPropagation();">
+								<div class="dropdown-option" onclick="choose_version(this, \'\')">
+									<img src="images/transparent.png" style="height: 30px;">&nbsp;
+								</div>';
 					foreach ($versions as $version) {
 						echo '
-							<option value="'.$version.'"'.(($version==$player_version)? " selected":"").'>'.$version.'</option>';
+								<div class="dropdown-option" onclick="choose_version(this, \''.$version.'\')">
+									<img src="images/card_types/'.$version.'.png" style="height: 30px;">'.$version.'
+								</div>';
 					}
-
-
 					echo '
-							
-						</select>
+							</div>
+							<input type="hidden" name="version" value="'.$player_version.'">
+						</div>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">中文名：</div>
-						<input type="text" name="C_name" style="display: inline-block;" value="'.$C_name.'" required>
+						<input type="text" name="C_name" style="display: inline-block; width: 180px;" value="'.$C_name.'" required>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">总评：</div>
-						<input type="number" name="rating" style="display: inline-block;" value="'.$rating.'" required>
+						<input type="number" name="rating" style="display: inline-block; width: 180px;" value="'.$rating.'" required>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">身价：</div>
-						<input type="number" name="price" style="display: inline-block;" value="'.$price.'" required>
+						<input type="number" name="price" style="display: inline-block; width: 180px;" value="'.$price.'" required>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">卡面：</div>

@@ -52,10 +52,10 @@
 			var score1 = document.getElementById("score1").value;
 			var score2 = document.getElementById("score2").value;
 			if (score1 != "" && score2 != "" && score1 == score2) {
-				document.getElementById("penalty").style.display = "inline";
+				document.getElementById("penalty").style.visibility = "visible";
 			}
 			else {
-				document.getElementById("penalty").style.display = "none";
+				document.getElementById("penalty").style.visibility = "hidden";
 				document.getElementById("penalty1").value = "";
 				document.getElementById("penalty2").value = "";
 			}
@@ -74,10 +74,10 @@
 			var score1 = document.getElementById("score1").value;
 			var score2 = document.getElementById("score2").value;
 			if (score1 != "" && score2 != "" && score1 == score2) {
-				document.getElementById("penalty").style.display = "inline";
+				document.getElementById("penalty").style.visibility = "visible";
 			}
 			else {
-				document.getElementById("penalty").style.display = "none";
+				document.getElementById("penalty").style.visibility = "hidden";
 				document.getElementById("penalty1").value = "";
 				document.getElementById("penalty2").value = "";
 			}

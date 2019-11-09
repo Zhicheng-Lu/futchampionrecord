@@ -17,6 +17,37 @@
 		</div><!-- /.modal -->
 	</form>
 
+	<style type="text/css">
+		.dropdown {
+			position: relative;
+			width: 180px;
+			height: 50px;
+			display: inline-block;
+			border: 1px solid #AAAAAA;
+			cursor: pointer;
+		}
+
+		.dropdown-options {
+			display: none;
+			position: absolute;
+			background-color: #F9F9F9;
+			box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+			width: 100%;
+			z-index: 1;
+			margin-top: 11px;
+			cursor: pointer;
+		}
+
+		.dropdown-option:hover {
+			color: white;
+			background-color: #18a3eb;
+		}
+
+		.dropdown:mouseleave .dropdown-options {
+			display: none;
+		}
+	</style>
+
 	<script type="text/javascript">
 		// document.getElementById('date').valueAsDate = new Date();
 
@@ -56,6 +87,40 @@
 
 		function preview_photo(input) {
 			document.getElementById("photo_preview").src = URL.createObjectURL(input.files[0]);
+		}
+
+		// drop down list
+		function show_options(dropdown) {
+			options = dropdown.childNodes[3];
+			if (options.style.display == "block") {
+				options.style.display = "none";
+			}
+			else {
+				options.style.display = "block";
+			}
+		}
+
+		function hide_options(dropdown) {
+			options = dropdown.childNodes[3];
+			options.style.display = "none";
+		}
+
+		function choose_version(option, version) {
+			event.stopPropagation();
+			options = option.parentNode;
+			options.style.display = "none";
+			dropdown = options.parentNode;
+			// show selected option
+			if (version == "") {
+				dropdown.childNodes[1].innerHTML = '<img src="images/transparent.png" style="height: 30px;">&nbsp';
+			}
+			else {
+				dropdown.childNodes[1].innerHTML = '<img src="images/card_types/' + version + '.png" style="height: 30px;">' + version;
+			}
+			// modify hidden input
+			input = dropdown.childNodes[5];
+			if (version == 0) input.value = "";
+			else input.value = version;
 		}
 	</script>
 

@@ -16,8 +16,8 @@
 						$penalty2 = $row["penalty2"];
 					}
 
-					if ($score1 == $score2 && $score1 != "") $penalty_display = "inline";
-					else $penalty_display = "none";
+					if ($score1 == $score2 && $score1 != "") $penalty_visibility = "visible";
+					else $penalty_visibility = "hidden";
 
 
 					// scores
@@ -25,7 +25,7 @@
 					<div class="row">
 						<div class="col-sm-40" style="text-align: center;">
 							<input type="number" id="score1" name="score1" min="0" max="15" style="width: 40px;" oninput="score1_oninput()" value="'.$score1.'"> - <input type="number" id="score2" name="score2" min="0" max="15" style="width: 40px;" oninput="score2_oninput()" value="'.$score2.'">
-							<b style="margin-left: 30px; display: '.$penalty_display.';" id="penalty">(<input type="number" id="penalty1" name="penalty1" min="0" max="15" style="width: 40px;" value="'.$penalty1.'"> - <input type="number" id="penalty2" name="penalty2" min="0" max="15" style="width: 40px;" value="'.$penalty2.'">)</b>';
+							<b style="margin-left: 30px; visibility: '.$penalty_visibility.';" id="penalty">(<input type="number" id="penalty1" name="penalty1" min="0" max="15" style="width: 40px;" value="'.$penalty1.'"> - <input type="number" id="penalty2" name="penalty2" min="0" max="15" style="width: 40px;" value="'.$penalty2.'">)</b>';
 
 					$squad_players = array();
 					$sql = 'SELECT * FROM squad AS S LEFT JOIN players AS P ON S.player_id=P.id ORDER BY S.position ASC';
