@@ -22,15 +22,18 @@
 
 			<div class="row">
 				<?php
-				for ($game=1; $game < 31; $game++) { 
-					echo '
-				<div id="game_'.$game.'" class="col-xxl-24 col-xl-30 col-lg-40 col-sm-60" style="border: 1px solid #888888; border-radius: 5px; min-height: 150px; cursor: pointer;" onclick="open_game_modal('.$game.')">
-					<b style="font-size: 20px;">Game '.$game.'</b><br>';
-
+				$num_win = 0;
+				$num_loss = 0;
+				for ($game=1; $game < 31; $game++) {
 					$sql = 'SELECT * FROM results WHERE fut_champion_id='.$fut_champion_id.' AND game='.$game;
 					$result = $conn->query($sql);
 					while ($row = $result->fetch_assoc()) {
+						if ($row["score1"]>$row["score2"] || ($row["score1"]==$row["score2"] && $row["penalty1"]>$row["penalty2"])) $num_win += 1;
+						else $num_loss += 1;
+
 						echo '
+				<div id="game_'.$game.'" class="col-xxl-24 col-xl-30 col-lg-40 col-sm-60" style="border: 1px solid #888888; border-radius: 5px; min-height: 150px; cursor: pointer;" onclick="open_game_modal('.$game.')">
+					<b style="font-size: 20px;">Game '.$game.' ('.$num_win.'-'.$num_loss.')</b><br>
 					<div class="row" style="font-size: 16px;">
 						<div class="col-60">
 							'.$row["score1"].' - '.$row["score2"];
