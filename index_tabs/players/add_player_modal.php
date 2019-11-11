@@ -111,16 +111,11 @@
 			options.style.display = "none";
 			dropdown = options.parentNode;
 			// show selected option
-			if (version == "") {
-				dropdown.childNodes[1].innerHTML = '<img src="images/transparent.png" style="height: 30px;">&nbsp';
-			}
-			else {
-				dropdown.childNodes[1].innerHTML = '<img src="images/card_types/' + version + '.png" style="height: 30px;">' + version;
-			}
+			dropdown.childNodes[1].innerHTML = '<img src="images/card_types/' + version + '.png" style="height: 30px;">' + version;
+			
 			// modify hidden input
 			input = dropdown.childNodes[5];
-			if (version == 0) input.value = "";
-			else input.value = version;
+			input.value = version;
 		}
 	</script>
 

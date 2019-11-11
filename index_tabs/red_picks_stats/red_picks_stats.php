@@ -89,7 +89,7 @@
             };
             xhttp.open("POST", "includes/get_player_game_history.php", true);
             xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhttp.send("game_player_name=" + game_player_name + "&player_id=" + player_id);
+            xhttp.send("game_player_name=&player_id=" + player_id);
 	    }
 
 	    function close_player_game_history_modal() {
