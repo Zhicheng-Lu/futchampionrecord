@@ -1,14 +1,61 @@
 	<br><br><br><br><br>
 
+	<style type="text/css">
+        #game_modal {
+        	z-index: 9999;
+        }
+
+        .submit_button {
+			height: 40px;
+			border-radius: 5px;
+			font-size: 20px;
+			background-color: white;
+			width: 40%;
+		}
+
+		.dropdown {
+			position: relative;
+			width: 140px;
+			height: 36px;
+			display: inline-block;
+			border: 1px solid #D9D9D9;
+			cursor: pointer;
+		}
+
+		.dropdown-options {
+			display: none;
+			position: absolute;
+			background-color: #F9F9F9;
+			box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+			width: 100%;
+			z-index: 1;
+			margin-top: 2px;
+			cursor: pointer;
+		}
+
+		.dropdown-option:hover {
+			color: white;
+			background-color: #18a3eb;
+		}
+
+		.dropdown:mouseleave .dropdown-options {
+			display: none;
+		}
+	</style>
+
 	<div class="section">
 		<div class="container" id="container">
 			<?php
-			$sql = 'SELECT COUNT(*) AS win FROM results WHERE fut_champion_id='.$fut_champion_id.' AND (score1>score2 OR penalty1>penalty2)';
+			if (!isset($_GET["game_player_name"])) $game_player_criteria = '';
+			elseif ($_GET["game_player_name"] == "") $game_player_criteria = '';
+			else $game_player_criteria = ' AND game_player="'.$_GET["game_player_name"].'"';
+
+			$sql = 'SELECT COUNT(*) AS win FROM results WHERE fut_champion_id='.$fut_champion_id.' AND (score1>score2 OR penalty1>penalty2)'.$game_player_criteria;
 			$result = $conn->query($sql);
 			while ($row = $result->fetch_assoc()) {
 				$win = $row["win"];
 			}
-			$sql = 'SELECT COUNT(*) AS loss FROM results WHERE fut_champion_id='.$fut_champion_id.' AND (score1<score2 OR penalty1<penalty2)';
+			$sql = 'SELECT COUNT(*) AS loss FROM results WHERE fut_champion_id='.$fut_champion_id.' AND (score1<score2 OR penalty1<penalty2)'.$game_player_criteria;
 			$result = $conn->query($sql);
 			while ($row = $result->fetch_assoc()) {
 				$loss = $row["loss"];
@@ -16,7 +63,23 @@
 
 			echo '
 			<center style="margin-bottom: 20px;">
-				<h2>'.$win.' 胜 '.$loss.' 负</h2>
+				<h2 style="display: inline-block;">'.$win.' 胜 '.$loss.' 负</h2>
+				&nbsp;&nbsp;&nbsp;
+				<div class="dropdown" style="text-align: left; display: inline-block;" onclick="show_options(this)" onmouseleave="hide_options(this)" ondragover="allowDrop(event)" ondrop="drop_player(this)">
+					<div><img src="images/transparent.png" style="height: 25px; width" 25px;>'.(($game_player_criteria=='')? '--选择玩家--':$_GET["game_player_name"]).'</div>
+					<div class="dropdown-options" onclick="event.stopPropagation();">
+						<div class="dropdown-option" onclick="choose_game_player(\'\')">
+							<img src="images/transparent.png" style="height: 25px; width" 25px;>
+						</div>
+						<div class="dropdown-option" onclick="choose_game_player(\'Andy\')">
+							<img src="images/transparent.png" style="height: 25px; width" 25px;>Andy
+						</div>
+						<div class="dropdown-option" onclick="choose_game_player(\'Jack\')">
+							<img src="images/transparent.png" style="height: 25px; width" 25px;>Jack
+						</div>
+					</div>
+					<input type="hidden" name="scorer_'.$counter.'" value="'.$row["sco_id"].'">
+				</div>
 			</center>';
 			?>
 
@@ -35,28 +98,33 @@
 					$sql = 'SELECT * FROM results WHERE fut_champion_id='.$fut_champion_id.' AND game='.$game;
 					$result = $conn->query($sql);
 					while ($row = $result->fetch_assoc()) {
+						$game_player = $row["game_player"];
 						$score1 = $row["score1"];
 						$score2 = $row["score2"];
 						$penalty1 = $row["penalty1"];
 						$penalty2 = $row["penalty2"];
 						$game_player = $row["game_player"];
-						if ($score1>$score2 || ($score1==$score2 && $penalty1>$penalty2)) {
-							$num_win += 1;
-							$color = "red";
-						}
-						else {
-							$num_loss += 1;
-							$color = "blue";
-						}
 						$show = true;
 					}
+					if (isset($_GET["game_player_name"])) {
+						if ($_GET["game_player_name"] != "" && $_GET["game_player_name"] != $game_player) continue;
+					}
+					if ($score1>$score2 || ($score1==$score2 && $penalty1>$penalty2)) {
+						$num_win += 1;
+						$color = "red";
+					}
+					if ($score1<$score2 || ($score1==$score2 && $penalty1<$penalty2)) {
+						$num_loss += 1;
+						$color = "blue";
+					}
+					
 
 					echo '
 				<div id="game_'.$game.'" class="col-xxl-24 col-xl-30 col-lg-40 col-sm-60" style="border: 1px solid #888888; border-radius: 5px; min-height: 150px; cursor: pointer;" onclick="open_game_modal('.$game.')">
 					<b style="font-size: 20px; color: '.$color.';">Game '.$game.(($show)?' ('.$num_win.'-'.$num_loss.')':'').'</b><br>
 					<div class="row" style="font-size: 16px;">
 						<div class="col-60">
-							'.$score1.' - '.$score2;
+							'.(($show)? $score1.' - '.$score2:'');
 
 						if ($penalty1 != "") {
 							echo ' ('.$penalty1.' - '.$penalty2.')';
@@ -126,18 +194,24 @@
 				}
 			}
 		}
-	</script>
 
-	<style type="text/css">
-        #game_modal {
-        	z-index: 9999;
-        }
-
-        .submit_button {
-			height: 40px;
-			border-radius: 5px;
-			font-size: 20px;
-			background-color: white;
-			width: 40%;
+		// drop down list
+		function show_options(dropdown) {
+			options = dropdown.childNodes[3];
+			if (options.style.display == "block") {
+				options.style.display = "none";
+			}
+			else {
+				options.style.display = "block";
+			}
 		}
-	</style>
+
+		function hide_options(dropdown) {
+			options = dropdown.childNodes[3];
+			options.style.display = "none";
+		}
+
+		function choose_game_player(game_player_name) {
+			location.href = 'fut_champion.php?fut_champion_id=<?php echo $fut_champion_id; ?>&tab=record&game_player_name=' + game_player_name;
+		}
+	</script>

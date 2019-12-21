@@ -16,7 +16,7 @@
 			<div class="row">
 				<?php
 				$counter = 0;
-				$sql = 'SELECT P.id, P.E_name, P.C_name, P.price, IFNULL(apps,0) AS apps FROM players AS P LEFT JOIN (SELECT player_id, COUNT(*) AS apps FROM appearances GROUP BY player_id) AS APP ON P.id=APP.player_id ORDER BY P.id DESC';
+				$sql = 'SELECT P.id, P.E_name, P.C_name, P.price, IFNULL(apps,0) AS apps, IFNULL(red_picks,0) AS red_picks FROM players AS P LEFT JOIN (SELECT player_id, COUNT(*) AS apps FROM appearances GROUP BY player_id) AS APP ON P.id=APP.player_id LEFT JOIN (SELECT player_id, COUNT(*) AS red_picks FROM red_picks GROUP BY player_id) AS RED_PICKS ON P.id=RED_PICKS.player_id ORDER BY P.id DESC';
 				$result = $conn->query($sql);
 				while ($row = $result->fetch_assoc()) { 
 					echo '
@@ -26,7 +26,7 @@
 							<img src="images/cards/'.$row["id"].'.png" style="height: 100%;">
 						</div>
 						<div style="height: 100%;" class="col-70">'.
-							(($row["apps"]==0)?'<span onclick="open_delete_player_modal('.$row["id"].')" style="float: right; font-size: 16px;"><b>&times;</b></span>':'').'
+							(($row["apps"]==0&&$row["red_picks"]==0)?'<span onclick="open_delete_player_modal('.$row["id"].')" style="float: right; font-size: 16px;"><b>&times;</b></span>':'').'
 							<b style="font-size: 16px;">'.$row["C_name"].'</b>
 							<br>
 							'.$row["E_name"].'

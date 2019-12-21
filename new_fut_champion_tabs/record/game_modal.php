@@ -118,6 +118,26 @@
 		}
 
 
+		// click checkbox for appearance
+		function sub_on(checkbox, player_id) {
+			if (checkbox.checked == true) {
+				checkbox.parentNode.parentNode.parentNode.setAttribute("draggable", "true");
+				options = document.getElementsByClassName("player_" + player_id);
+				for (var i = options.length - 1; i >= 0; i--) {
+					console.log(options[i]);
+					options[i].style.display = "block";
+				}
+			}
+			else {
+				checkbox.parentNode.parentNode.parentNode.setAttribute("draggable", "false");
+				options = document.getElementsByClassName("player_" + player_id);
+				for (var i = options.length - 1; i >= 0; i--) {
+					options[i].style.display = "none";
+				}
+			}
+		}
+
+
 		// drag and drop
 		var player_id;
 		var player_name;
