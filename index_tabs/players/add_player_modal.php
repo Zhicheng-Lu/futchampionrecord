@@ -20,7 +20,7 @@
 	<style type="text/css">
 		.dropdown {
 			position: relative;
-			width: 180px;
+			width: 200px;
 			height: 50px;
 			display: inline-block;
 			border: 1px solid #AAAAAA;

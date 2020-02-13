@@ -17,12 +17,12 @@
 						$price = $row["price"];
 					}
 
-					$versions = array("Gold Rare", "Ones to Watch", "Team of the Week", "FUT Champion", "Icon", "Ultimate Scream", "Storyline", "Premium League POTM", "UCL Road to the Final", "Flashback", "Premium SBC", "League SBC");
+					$versions = array("Gold Rare", "Ones to Watch", "Team of the Week", "FUT Champion", "Icon", "Ultimate Scream", "Storyline", "Premium League POTM", "UCL Road to the Final", "Flashback", "Premium SBC", "League SBC", "FUTMAS", "Team of the Year", "Future Stars", "Player Moments");
 
 					echo '
 					<div>
 						<div style="width: 70px; display: inline-block;">英文名：</div>
-						<input type="text" name="E_name" style="display: inline-block; width: 180px;" value="'.$E_name.'" required>
+						<input type="text" name="E_name" style="display: inline-block; width: 200px;" value="'.$E_name.'" required>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">卡种：</div>
@@ -42,15 +42,15 @@
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">中文名：</div>
-						<input type="text" name="C_name" style="display: inline-block; width: 180px;" value="'.$C_name.'" required>
+						<input type="text" name="C_name" style="display: inline-block; width: 200px;" value="'.$C_name.'" required>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">总评：</div>
-						<input type="number" name="rating" style="display: inline-block; width: 180px;" value="'.$rating.'" required>
+						<input type="number" name="rating" style="display: inline-block; width: 200px;" value="'.$rating.'" required>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">身价：</div>
-						<input type="number" name="price" style="display: inline-block; width: 180px;" value="'.$price.'" required>
+						<input type="number" name="price" style="display: inline-block; width: 200px;" value="'.$price.'" required>
 					</div>
 					<div style="margin-top: 15px;">
 						<div style="width: 70px; display: inline-block;">卡面：</div>
