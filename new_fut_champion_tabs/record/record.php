@@ -31,10 +31,15 @@
 			while ($row = $result->fetch_assoc()) {
 				$loss = $row["loss"];
 			}
+			$sql = 'SELECT MAX(game) AS num_games FROM results WHERE fut_champion_id='.$fut_champion_id;
+			$result = $conn->query($sql);
+			while ($row = $result->fetch_assoc()) {
+				$num_games = $row["num_games"];
+			}
 
 			echo '
 			<center style="margin-bottom: 20px;">
-				<h2>'.$win.' 胜 '.$loss.' 负&nbsp;&nbsp;&nbsp;<button class="submit_button" style="width: 150px;" onclick="open_end_modal()">结束周赛</button></h2>
+				<h2>'.$win.' 胜 '.$loss.' 负'.(($win+$loss==$num_games)?'':' ('.($num_games-$win-$loss).')').'&nbsp;&nbsp;&nbsp;<button class="submit_button" style="width: 150px;" onclick="open_end_modal()">结束周赛</button></h2>
 			</center>';
 			?>
 

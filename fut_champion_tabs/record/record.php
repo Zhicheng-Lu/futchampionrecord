@@ -61,9 +61,29 @@
 				$loss = $row["loss"];
 			}
 
+			// num_games in different situations
+			if (!isset($_GET["game_player_name"])) {
+				$sql = 'SELECT MAX(game) AS num_games FROM results WHERE fut_champion_id='.$fut_champion_id;
+				$result = $conn->query($sql);
+				while ($row = $result->fetch_assoc()) {
+					$num_games = $row["num_games"];
+				}
+			}
+			elseif ($_GET["game_player_name"] == "") {
+				$sql = 'SELECT MAX(game) AS num_games FROM results WHERE fut_champion_id='.$fut_champion_id;
+				$result = $conn->query($sql);
+				while ($row = $result->fetch_assoc()) {
+					$num_games = $row["num_games"];
+				}
+			}
+			else {
+				$num_games = $win + $loss;
+			}
+			
+
 			echo '
 			<center style="margin-bottom: 20px;">
-				<h2 style="display: inline-block;">'.$win.' 胜 '.$loss.' 负</h2>
+				<h2 style="display: inline-block;">'.$win.' 胜 '.($num_games-$win).' 负'.(($win+$loss==$num_games)?'':' ('.($num_games-$win-$loss).')').'</h2>
 				&nbsp;&nbsp;&nbsp;
 				<div class="dropdown" style="text-align: left; display: inline-block;" onclick="show_options(this)" onmouseleave="hide_options(this)" ondragover="allowDrop(event)" ondrop="drop_player(this)">
 					<div><img src="images/transparent.png" style="height: 25px; width" 25px;>'.(($game_player_criteria=='')? '--选择玩家--':$_GET["game_player_name"]).'</div>
@@ -78,7 +98,6 @@
 							<img src="images/transparent.png" style="height: 25px; width" 25px;>Jack
 						</div>
 					</div>
-					<input type="hidden" name="scorer_'.$counter.'" value="'.$row["sco_id"].'">
 				</div>
 			</center>';
 			?>
@@ -109,6 +128,10 @@
 					if (isset($_GET["game_player_name"])) {
 						if ($_GET["game_player_name"] != "" && $_GET["game_player_name"] != $game_player) continue;
 					}
+					if (!$show) {
+						$num_loss += 1;
+						if ($game < $num_games) $show = true;
+					}
 					if ($score1>$score2 || ($score1==$score2 && $penalty1>$penalty2)) {
 						$num_win += 1;
 						$color = "red";
@@ -124,7 +147,7 @@
 					<b style="font-size: 20px; color: '.$color.';">Game '.$game.(($show)?' ('.$num_win.'-'.$num_loss.')':'').'</b><br>
 					<div class="row" style="font-size: 16px;">
 						<div class="col-60">
-							'.(($show)? $score1.' - '.$score2:'');
+							'.(($score1!="")? $score1.' - '.$score2:'');
 
 						if ($penalty1 != "") {
 							echo ' ('.$penalty1.' - '.$penalty2.')';

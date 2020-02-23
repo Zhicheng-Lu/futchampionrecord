@@ -17,7 +17,7 @@
 						$price = $row["price"];
 					}
 
-					$versions = array("Gold Rare", "Ones to Watch", "Team of the Week", "FUT Champion", "Icon", "Ultimate Scream", "Storyline", "Premium League POTM", "UCL Road to the Final", "Flashback", "Premium SBC", "League SBC", "FUTMAS", "Team of the Year", "Future Stars", "Player Moments");
+					$versions = array("Gold Rare", "Team of the Week", "Ones to Watch", "FUT Champion", "Icon", "Ultimate Scream", "Storyline", "Premium League POTM", "UCL Road to the Final", "Flashback", "Premium SBC", "League Objective Player", "League SBC", "FUTMAS", "Team of the Year", "Future Stars", "Player Moments");
 
 					echo '
 					<div>

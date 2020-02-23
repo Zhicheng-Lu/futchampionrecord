@@ -21,13 +21,18 @@
 						while ($row1 = $result1->fetch_assoc()) {
 							$loss = $row1["loss"];
 						}
+						$sql1 = 'SELECT MAX(game) AS num_games FROM results WHERE fut_champion_id='.$fut_champion_id;
+						$result1 = $conn->query($sql1);
+						while ($row1 = $result1->fetch_assoc()) {
+							$num_games = $row1["num_games"];
+						}
 
                         echo '
                     <div class="col-xxl-30 col-xl-30 col-lg-40 col-md-60 col-120" style="margin-bottom: 20px;">
                         <div style="width: 90px; display: inline-block;">
                             <a href="fut_champion.php?fut_champion_id='.$fut_champion_id.'&tab=record" target="_blank" style="text-decoration: underline; color: blue;">'.$date.':</a>
                         </div>
-                        <a style="color: black;">'.$win.' 胜 '.$loss.' 负</a>
+                        <a style="color: black;">'.$win.' 胜 '.($num_games-$win).' 负'.(($win+$loss==$num_games)?'':' ('.($num_games-$win-$loss).')').'</a>
                     </div>';
                     }
 
@@ -51,13 +56,18 @@
 							while ($row1 = $result1->fetch_assoc()) {
 								$loss = $row1["loss"];
 							}
+							$sql1 = 'SELECT MAX(game) AS num_games FROM results WHERE fut_champion_id='.$fut_champion_id;
+							$result1 = $conn->query($sql1);
+							while ($row1 = $result1->fetch_assoc()) {
+								$num_games = $row1["num_games"];
+							}
 
 	                        echo '
 	                    <div class="col-xxl-30 col-xl-30 col-lg-40 col-md-60 col-120" style="margin-bottom: 20px;">
 	                        <div style="width: 90px; display: inline-block;">
 	                            <a href="new_fut_champion.php?fut_champion_id='.$fut_champion_id.'&tab=record" target="_blank" style="text-decoration: underline; color: blue;">'.$date.':</a>
 	                        </div>
-	                        <a style="color: black;">'.$win.' 胜 '.$loss.' 负</a>
+	                        <a style="color: black;">'.$win.' 胜 '.($num_games-$win).' 负'.(($win+$loss==$num_games)?'':' ('.($num_games-$win-$loss).')').'</a>
 	                    </div>';
                     	}
                     }
@@ -83,7 +93,7 @@
 					<span class="close" onclick="close_modal()">&times;</span>
 				</div>
 				<div class="modal-body" id="modal_body">
-					<input type="date" id="date" name="date" value="<?php echo date("Y-m-d"); ?>">
+					<input type="date" id="date" name="date" value="<?php date_default_timezone_set('Australia/Sydney'); echo date("Y-m-d"); ?>">
 				</div>
 				<div class="modal-footer justify-content-center">
 					<button name="create_fut_champion" class="submit_button">确认</button>

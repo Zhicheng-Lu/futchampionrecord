@@ -4,8 +4,8 @@
 				$column = $_POST["column"];
 				$order = $_POST["order"];
 				$order_by = $column." ".$order;
-				if ($order == "ASC") $order_by = $order_by.', appearance ASC, num_score ASC, num_assist ASC, win_rate ASC, rating ASC';
-				else $order_by = $order_by.', appearance DESC, num_score DESC, num_assist DESC, win_rate DESC, rating DESC';
+				if ($order == "ASC") $order_by = $order_by.', appearance ASC, avg_sum ASC, num_score ASC, num_assist ASC, win_rate ASC, rating ASC';
+				else $order_by = $order_by.', appearance DESC, avg_sum DESC, num_score DESC, num_assist DESC, win_rate DESC, rating DESC';
 
 				if ($order == "ASC") $icon = '<i class="fa fa-chevron-up"></i>';
 				else $icon = '<i class="fa fa-chevron-down"></i>';
